@@ -3,7 +3,7 @@ package com.example.springBootfirstapp;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Utils {
+public class  Utils {
     private static final Map<Character, String> translitMap = new HashMap<>();
 
     static {

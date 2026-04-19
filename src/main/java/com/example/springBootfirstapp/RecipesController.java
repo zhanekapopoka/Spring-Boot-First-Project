@@ -9,6 +9,7 @@ public class RecipesController {
 
     public RecipesController(RecipeService service) {
         this.service = service;
+
     }
 
     @GetMapping(params="recipe")

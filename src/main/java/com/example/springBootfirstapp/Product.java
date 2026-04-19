@@ -13,6 +13,7 @@ public class Product {
         this.name = name;
         this.alterName = altername;
         this.translate = translate;
+
         this.slug=Utils.returnSlug(name);
         this.recipeListForProduct=recipeListForProduct;
     }

@@ -80,6 +80,7 @@ public class RecipeService {
                 while (rs3.next()) {
                     String recipeName = rs3.getString("name_of_recipe");
                     String recipeText = rs3.getString("recipe");
+
                     recipeList.add(recipeName + " | " + recipeText);
                 }
                 Product product = new Product(nameOfProduct, "", "", recipeList);
