@@ -11,6 +11,59 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class RecipeService {
+    public String postRecipe(Recipes recipe) {
+        String sql = "INSERT INTO recipes (name_of_recipe,translate_of_recipe,slug_of_recipe,alter_name_of_recipe,recipe) VALUES(?,?,?,?,?)";
+        try (Connection conn = DbConnection.getConnection();
+             PreparedStatement pstm = conn.prepareStatement(sql)) {
+            String name = recipe.getName();
+            String altername = recipe.getAlter_name_of_recipe();
+            String recipeText = recipe.getRecipe();
+            String translate = recipe.getTranslate_of_recipe();
+            String slug = Utils.returnSlug(name);
+            pstm.setString(1, name);
+            pstm.setString(2, translate);
+            pstm.setString(3, slug);
+            pstm.setString(4, altername);
+            pstm.setString(5, recipeText);
+            pstm.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return "Recipe created";
+    }
+    public String deleteByRecipe(int id){
+        String sql= "DELETE FROM recipes WHERE id =?";
+        try(Connection connection = DbConnection.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);){
+            preparedStatement.setInt(1,id);
+            preparedStatement.executeUpdate();
+        }catch (SQLException exception){
+            exception.printStackTrace();
+        }
+        return "Recipe deleted";
+    }
+
+    public ArrayList<Recipes> getAllRecipes() {
+        ArrayList<Recipes> recipes = new ArrayList<>();
+        String sql2 = "SELECT * FROM recipes";
+        try (Connection conn = DbConnection.getConnection();
+             PreparedStatement pstm = conn.prepareStatement(sql2);) {
+            ResultSet rs = pstm.executeQuery();
+            while (rs.next()) {
+                int id=rs.getInt("id");
+                String name = rs.getString("name_of_recipe");
+                String translate = rs.getString("translate_of_recipe");
+                String alterName = rs.getString("alter_name_of_recipe");
+                String recipeText = rs.getString("recipe");
+                List<String> products = new ArrayList<>();
+                com.example.springBootfirstapp.Recipes recipe = new Recipes(id,name, translate, alterName, recipeText, products);
+                recipes.add(recipe);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return recipes;
+    }
 
     public Recipes findRecipeByName(String input) {
         String sql = "SELECT * FROM recipes WHERE LOWER(name_of_recipe) = LOWER(?)";
@@ -41,7 +94,7 @@ public class RecipeService {
                 while (rs2.next()) {
                     products.add(rs2.getString("name"));
                 }
-                Recipes recipe = new Recipes(name, "", "", recipeText, products);
+                Recipes recipe = new Recipes(recipeId,name, "", "", recipeText, products);
                 return recipe;
             } else {
                 return null;
@@ -80,10 +133,9 @@ public class RecipeService {
                 while (rs3.next()) {
                     String recipeName = rs3.getString("name_of_recipe");
                     String recipeText = rs3.getString("recipe");
-
                     recipeList.add(recipeName + " | " + recipeText);
                 }
-                Product product = new Product(nameOfProduct, "", "", recipeList);
+                Product product = new Product(productId,nameOfProduct, "", "", recipeList);
                 return product;
             } else {
                 return null;
