@@ -62,23 +62,57 @@ public class ProductService {
         return "Product created";
     }
 
-    public ArrayList<Product> getAllProducts() {
+    public PaginatedProductResponse getAllProducts(Integer page) {
+        int limit = 5;
+        int currentPage;
+        if (page == null || page < 1) {
+            currentPage = 1;
+        } else {
+            currentPage = page;
+        }
+        int offset = (currentPage - 1) * limit;
+        ArrayList<Product> products = getProductsByLimitAndOffset(limit, offset);
+        int totalItems = countProducts();
+        int numberOfPages = (int) Math.ceil(totalItems / (double) limit);
+        return new PaginatedProductResponse(products,products.size(), currentPage,numberOfPages);
+    }
+
+    private ArrayList<Product> getProductsByLimitAndOffset(int limit, int offset) {
         ArrayList<Product> products = new ArrayList<>();
-        String sql2 = "SELECT * FROM products";
+        String sql = "SELECT * FROM products ORDER BY id LIMIT ? OFFSET ?";
         try (Connection conn = DbConnection.getConnection();
-             PreparedStatement pstm = conn.prepareStatement(sql2)) {
+             PreparedStatement pstm = conn.prepareStatement(sql)) {
+            pstm.setInt(1, limit);
+            pstm.setInt(2, offset);
             ResultSet rs = pstm.executeQuery();
             while (rs.next()) {
-                int id = rs.getInt("id");
-                String name = rs.getString("name");
-                String translate = rs.getString("translate_name");
-                String alterName = rs.getString("alter_name");
-                Product product = new Product(id, name, translate, alterName, new ArrayList<>());
+                Product product = mapProduct(rs);
                 products.add(product);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return products;
+    }
+
+    private int countProducts() {
+        String sql = "SELECT COUNT(*) FROM products";
+        try (Connection conn = DbConnection.getConnection();
+             PreparedStatement pstm = conn.prepareStatement(sql)) {
+            ResultSet rs = pstm.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+    private Product mapProduct(ResultSet rs) throws SQLException {
+        int id = rs.getInt("id");
+        String name = rs.getString("name");
+        String translate = rs.getString("translate_name");
+        String alterName = rs.getString("alter_name");
+        return new Product(id, name, translate, alterName, new ArrayList<>());
     }
 }

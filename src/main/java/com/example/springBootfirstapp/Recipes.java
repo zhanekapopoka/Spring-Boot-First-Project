@@ -10,7 +10,7 @@ public class Recipes {
     private String slug_of_recipe;
     private String alter_name_of_recipe;
     private String recipe;
-    private List<String> products= new ArrayList<>();
+    private List<String> products;
 
     public Recipes(Integer id,String name, String translate, String alterName, String recipe,List<String> products) {
         this.id =id;

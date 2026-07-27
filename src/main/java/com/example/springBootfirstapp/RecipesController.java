@@ -23,30 +23,42 @@ public class RecipesController {
     }
 
     @PutMapping("/product/{id}")
-    public String updateProduct(@RequestBody int id, Product product ){
-        return service1.updateProduct(id,product);
+    public String updateProduct(@PathVariable int id, @RequestBody Product product) {
+        return service1.updateProduct(id, product);
+    }
+
+    @PutMapping("/recipe/{id}")
+    public String updateRecipe(@PathVariable int id, @RequestBody Recipes recipe) {
+        return service.updateRecipe(id, recipe);
     }
 
     @GetMapping("/products")
-    public ArrayList<Product> getAllProducts() {
-        return service1.getAllProducts();
+    public PaginatedProductResponse getAllProducts(@RequestParam(required = false) Integer page) {
+        return service1.getAllProducts(page);
     }
+
     @DeleteMapping("/product/{id}")
-    public String deleteByProductId(@PathVariable int id){
+    public String deleteByProductId(@PathVariable int id) {
         return service1.deleteByProduct(id);
     }
+
     @DeleteMapping("/recipes/{id}")
-    public String deleteByRecipeId(@PathVariable int id){
+    public String deleteByRecipeId(@PathVariable int id) {
         return service.deleteByRecipe(id);
     }
 
     @GetMapping("/recipes")
-    public ArrayList<Recipes> getAllRecipes() {
-        return service.getAllRecipes();
+    public PaginatedRecipeResponse getAllRecipes(@RequestParam(required = false) Integer page) {
+        return service.getAllRecipes(page);
     }
 
-    @GetMapping(params = "recipes")
-    public Recipes getRecipe(@RequestParam String recipe) {//замениить на query
+    @GetMapping(params = "product")
+    public Product getProduct(@RequestParam String product) {
+        return service.findByProduct(product);
+    }
+
+    @GetMapping(params = "recipe")
+    public Recipes getRecipe(@RequestParam String recipe) {
         return service.findRecipeByName(recipe);
     }
 

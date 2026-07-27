@@ -4,25 +4,91 @@ import java.sql.*;
 
 public class DataSource {
     public static void main(String[] args) {
-        String sql = "INSERT INTO recipe__products (recipe_id, product_id) VALUES (?, ?)";
+        String sql = """
+    INSERT INTO recipe__products (recipe_id, product_id)
+    VALUES (?, ?)
+    ON CONFLICT (recipe_id, product_id) DO NOTHING
+""";;
 
         try (Connection conn = DbConnection.getConnection();
              PreparedStatement pstm = conn.prepareStatement(sql)) {
 
-
-            pstm.setInt(1, 6); // Омлет
-            pstm.setInt(2, 17); // яйца
+// Курица с рисом
+            pstm.setInt(1, 5);
+            pstm.setInt(2, 46); // рис
             pstm.executeUpdate();
 
-            pstm.setInt(1, 6); // Омлет
-            pstm.setInt(2, 18); // молоко
+            pstm.setInt(1, 5);
+            pstm.setInt(2, 47); // масло
             pstm.executeUpdate();
 
-            pstm.setInt(1, 6); // Омлет
-            pstm.setInt(2, 19); // соль
+
+// Жареный рис с яйцом
+            pstm.setInt(1, 7);
+            pstm.setInt(2, 46); // рис
+            pstm.executeUpdate();
+
+            pstm.setInt(1, 7);
+            pstm.setInt(2, 47); // масло
+            pstm.executeUpdate();
+
+
+// Гренки
+            pstm.setInt(1, 8);
+            pstm.setInt(2, 47); // масло
+            pstm.executeUpdate();
+
+
+// Каша овсянная
+            pstm.setInt(1, 10);
+            pstm.setInt(2, 48); // овсянка
+            pstm.executeUpdate();
+
+
+// Бутерброд с колбасой и сыром
+            pstm.setInt(1, 13);
+            pstm.setInt(2, 49); // колбаса
+            pstm.executeUpdate();
+
+
+// Йогурт с гранолой и фруктами
+            pstm.setInt(1, 17);
+            pstm.setInt(2, 51); // йогурт
+            pstm.executeUpdate();
+
+            pstm.setInt(1, 17);
+            pstm.setInt(2, 52); // гранола
+            pstm.executeUpdate();
+
+            pstm.setInt(1, 17);
+            pstm.setInt(2, 25); // банан
+            pstm.executeUpdate();
+
+
+// Лаваш с тунцом и овощами
+            pstm.setInt(1, 16);
+            pstm.setInt(2, 53); // лаваш
+            pstm.executeUpdate();
+
+
+// Творожная запеканка
+            pstm.setInt(1, 19);
+            pstm.setInt(2, 54); // манка
+            pstm.executeUpdate();
+
+
+// Рыбный суп
+            pstm.setInt(1, 23);
+            pstm.setInt(2, 58); // рыба
+            pstm.executeUpdate();
+
+
+// Макароны с сосисками
+            pstm.setInt(1, 24);
+            pstm.setInt(2, 50); // сосиски
             pstm.executeUpdate();
 //
-//            System.out.println("Связи добавлены успешно");
+            System.out.println("Связи добавлены успешно");
 //        String sql = "INSERT INTO products (name,translate_name,slug,alter_name) VALUES(?,?,?,?)";
 //        try (Connection conn = DbConnection.getConnection();
 //             PreparedStatement pstm = conn.prepareStatement(sql);) {
