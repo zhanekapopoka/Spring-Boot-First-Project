@@ -1,5 +1,7 @@
-package com.example.springBootfirstapp;
+package com.example.springBootfirstapp.Service;
 
+import com.example.springBootfirstapp.Repositories.UserRepository;
+import com.example.springBootfirstapp.Entities.UserEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -12,7 +14,7 @@ public class Userservice {
         this.userRepository = userRepository;
     }
 
-    public Optional<User> getByLogin(String login) {
+    public Optional<UserEntity> getByLogin(String login) {
         return userRepository.findByLogin(login);
     }
 }

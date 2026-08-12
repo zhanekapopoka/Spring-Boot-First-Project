@@ -1,11 +1,15 @@
-package com.example.springBootfirstapp;
+package com.example.springBootfirstapp.Entities;
 
+import com.example.springBootfirstapp.Role;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Size;
+
 import java.util.Set;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -17,6 +21,11 @@ public class User {
     private String lastName;
     @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
+    @CollectionTable(
+            name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id")
+    )
+    @Column(name = "roles")
     private Set<Role> roles;
 
     public Long getId() {
@@ -67,11 +76,11 @@ public class User {
         this.lastName = lastName;
     }
 
-    public User(){
+    public UserEntity(){
 
     }
 
-    public User(String login, String password, String firstName, String lastName, Set<Role> roles) {
+    public UserEntity(String login, String password, String firstName, String lastName, Set<Role> roles) {
         this.login = login;
         this.password = password;
         this.firstName = firstName;

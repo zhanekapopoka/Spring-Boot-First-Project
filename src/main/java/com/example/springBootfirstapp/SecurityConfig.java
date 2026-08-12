@@ -1,9 +1,9 @@
 package com.example.springBootfirstapp;
 
+import com.example.springBootfirstapp.Authentication.JwtFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.config.annotation.AbstractConfiguredSecurityBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -49,16 +49,17 @@ public class SecurityConfig {
 
                                 .requestMatchers(HttpMethod.GET, "/api/products").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/recipes").permitAll()
-                                .requestMatchers(HttpMethod.GET, "/api").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/api/search").permitAll()
 
-                                .requestMatchers(HttpMethod.POST, "/api/product").hasAuthority("ADMIN")
-                                .requestMatchers(HttpMethod.POST, "/api/recipe").hasAuthority("ADMIN")
 
-                                .requestMatchers(HttpMethod.PUT, "/api/product/**").hasAuthority("ADMIN")
-                                .requestMatchers(HttpMethod.PUT, "/api/recipe/**").hasAuthority("ADMIN")
+                                .requestMatchers(HttpMethod.POST, "/api/product").hasAnyAuthority("ADMIN", "ROLE_ADMIN")
+                                .requestMatchers(HttpMethod.POST, "/api/recipe").hasAnyAuthority("ADMIN", "ROLE_ADMIN")
 
-                                .requestMatchers(HttpMethod.DELETE, "/api/product/**").hasAuthority("ADMIN")
-                                .requestMatchers(HttpMethod.DELETE, "/api/recipes/**").hasAuthority("ADMIN")
+                                .requestMatchers(HttpMethod.PUT, "/api/product/**").hasAnyAuthority("ADMIN", "ROLE_ADMIN")
+                                .requestMatchers(HttpMethod.PUT, "/api/recipe/**").hasAnyAuthority("ADMIN", "ROLE_ADMIN")
+
+                                .requestMatchers(HttpMethod.DELETE, "/api/product/**").hasAnyAuthority("ADMIN", "ROLE_ADMIN")
+                                .requestMatchers(HttpMethod.DELETE, "/api/recipes/**").hasAnyAuthority("ADMIN", "ROLE_ADMIN")
 
                                 .anyRequest().authenticated()
                 )

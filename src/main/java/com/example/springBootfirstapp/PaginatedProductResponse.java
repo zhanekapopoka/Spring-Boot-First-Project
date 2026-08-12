@@ -1,21 +1,23 @@
 package com.example.springBootfirstapp;
 
+import com.example.springBootfirstapp.Entities.ProductEntity;
+
 import java.util.ArrayList;
 
 public class PaginatedProductResponse {
-    private ArrayList<Product> items;
+    private ArrayList<ProductEntity> items;
     private int count;
     private int currentPage;
     private int numberOfPages;
 
-    public PaginatedProductResponse(ArrayList<Product> items, int count, int currentPage, int numberOfPages) {
+    public PaginatedProductResponse(ArrayList<ProductEntity> items, int count, int currentPage, int numberOfPages) {
         this.items = items;
         this.count = count;
         this.currentPage = currentPage;
         this.numberOfPages = numberOfPages;
     }
 
-    public ArrayList<Product> getItems() {
+    public ArrayList<ProductEntity> getItems() {
         return items;
     }
 

@@ -1,4 +1,4 @@
-package com.example.springBootfirstapp;
+package com.example.springBootfirstapp.Authentication;
 
 public class JwtRequest {
     private String login;

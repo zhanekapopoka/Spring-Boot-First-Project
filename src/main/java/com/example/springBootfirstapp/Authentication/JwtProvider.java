@@ -1,5 +1,6 @@
-package com.example.springBootfirstapp;
+package com.example.springBootfirstapp.Authentication;
 
+import com.example.springBootfirstapp.Entities.UserEntity;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -31,7 +32,7 @@ public class JwtProvider {
         this.jwtRefreshSecret = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtRefreshSecret));
     }
 
-    public String generateAccessToken(User user) {
+    public String generateAccessToken(UserEntity user) {
         LocalDateTime now = LocalDateTime.now();
         Instant accessExpirationInstant = now.plusMinutes(5)
                 .atZone(ZoneId.systemDefault())
@@ -48,7 +49,7 @@ public class JwtProvider {
                 .compact();
     }
 
-    public String generateRefreshToken(User user) {
+    public String generateRefreshToken(UserEntity user) {
         LocalDateTime now = LocalDateTime.now();
         Instant refreshExpirationInstant = now.plusDays(30)
                 .atZone(ZoneId.systemDefault())

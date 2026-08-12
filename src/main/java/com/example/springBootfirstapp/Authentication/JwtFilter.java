@@ -1,4 +1,4 @@
-package com.example.springBootfirstapp;
+package com.example.springBootfirstapp.Authentication;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

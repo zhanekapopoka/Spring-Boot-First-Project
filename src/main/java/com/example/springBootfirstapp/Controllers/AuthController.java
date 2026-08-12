@@ -1,5 +1,9 @@
-package com.example.springBootfirstapp;
+package com.example.springBootfirstapp.Controllers;
 
+import com.example.springBootfirstapp.*;
+import com.example.springBootfirstapp.Authentication.JwtRequest;
+import com.example.springBootfirstapp.Authentication.JwtResponse;
+import com.example.springBootfirstapp.Authentication.RefreshJwtRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

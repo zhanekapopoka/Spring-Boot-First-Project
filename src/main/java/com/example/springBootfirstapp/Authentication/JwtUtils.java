@@ -1,5 +1,6 @@
-package com.example.springBootfirstapp;
+package com.example.springBootfirstapp.Authentication;
 
+import com.example.springBootfirstapp.Role;
 import io.jsonwebtoken.Claims;
 
 import java.util.List;

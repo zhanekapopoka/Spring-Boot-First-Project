@@ -1,12 +1,16 @@
 package com.example.springBootfirstapp;
 
+import com.example.springBootfirstapp.Authentication.JwtProvider;
+import com.example.springBootfirstapp.Authentication.JwtRequest;
+import com.example.springBootfirstapp.Authentication.JwtResponse;
+import com.example.springBootfirstapp.Entities.UserEntity;
+import com.example.springBootfirstapp.Service.Userservice;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
 
@@ -27,7 +31,7 @@ public class AuthServiceTest {
 
     @Test
     public void createTokensIfPasswordCorrectShouldReturnTokens() {
-        User user = new User();
+        UserEntity user = new UserEntity();
         user.setLogin("zhanel");
         user.setPassword("1234");
         user.setFirstName("Zhanel");
@@ -47,7 +51,7 @@ public class AuthServiceTest {
 
     @Test
     public void loginReturnsTokenIfPasswordPasses(){
-        User user = new User();
+        UserEntity user = new UserEntity();
         user.setLogin("zhanel2");
         user.setPassword("1234");
         user.setFirstName("zhan");
