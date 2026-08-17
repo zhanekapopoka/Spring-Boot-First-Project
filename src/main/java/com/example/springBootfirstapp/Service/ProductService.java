@@ -5,7 +5,7 @@ import com.example.springBootfirstapp.DTO.RecipeDto;
 import com.example.springBootfirstapp.Entities.AlterNameEntity;
 import com.example.springBootfirstapp.Entities.RecipeEntity;
 import com.example.springBootfirstapp.Entities.TranslateEntity;
-import com.example.springBootfirstapp.PaginatedProductResponse;
+import com.example.springBootfirstapp.Pagination.PaginatedProductResponse;
 import com.example.springBootfirstapp.Entities.ProductEntity;
 import com.example.springBootfirstapp.Repositories.ProductRepository;
 import org.springframework.data.domain.Page;
@@ -49,7 +49,7 @@ public class ProductService {
         return "Product created";
     }
 
-    public PaginatedProductResponse getAllProducts(Integer page) {
+    public PaginatedProductResponse getAllProducts(Integer page, String lang) {
         int limit = 5;
         int currentPage;
         if (page == null || page < 1) {
@@ -60,14 +60,17 @@ public class ProductService {
 
         PageRequest pageRequest = PageRequest.of(currentPage - 1, limit);
         Page<ProductEntity> productPage = productRepository.findAll(pageRequest);
-        ArrayList<ProductEntity> products = new ArrayList<>(productPage.getContent());
+        List<ProductDto> products = productPage.getContent()
+                .stream()
+                .map(productEntity -> returnProduct(productEntity,lang))
+                .toList();
         int totalItems = (int) productPage.getTotalElements();
         int numberOfPages = productPage.getTotalPages();
         return new PaginatedProductResponse(products, products.size(), currentPage, numberOfPages);
     }
 
     public ProductDto findByProduct(String name, String lang) {
-        ProductEntity productEntity = productRepository.findByNameOrAlterName(name)
+        ProductEntity productEntity = productRepository.findByNameOrAlterNameOrTranslation(name)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
 
         return returnProduct(productEntity, lang);
@@ -125,7 +128,8 @@ public class ProductService {
                 recipeName,
                 alterNames,
                 recipeEntity.getSlugRecipe(),
-                recipeText
+                recipeText,
+                List.of()
         );
     }
 

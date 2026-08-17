@@ -10,7 +10,7 @@ public class ProductDto {
     private List<RecipeDto> recipes;
 
     public ProductDto(String name, List<String> alterName, List<RecipeDto> recipesForProduct, String slug, Integer id){
-        this.alterNames =alterName;
+        this.alterNames=alterName;
         this.name=name;
         this.recipes = recipesForProduct;
         this.slug=slug;
@@ -20,7 +20,7 @@ public class ProductDto {
     public String getName(){
         return name;
     }
-    public List<String> getAlterNames(){
+    public List<String> getAlterName(){
         return alterNames;
     }
     public String getSlug(){

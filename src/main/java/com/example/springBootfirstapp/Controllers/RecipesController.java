@@ -1,9 +1,7 @@
 package com.example.springBootfirstapp.Controllers;
 
 import com.example.springBootfirstapp.DTO.RecipeDto;
-import com.example.springBootfirstapp.PaginatedProductResponse;
-import com.example.springBootfirstapp.PaginatedRecipeResponse;
-import com.example.springBootfirstapp.Entities.ProductEntity;
+import com.example.springBootfirstapp.Pagination.PaginatedRecipeResponse;
 import com.example.springBootfirstapp.Entities.RecipeEntity;
 import com.example.springBootfirstapp.Service.ProductService;
 import com.example.springBootfirstapp.Service.RecipeService;
@@ -55,8 +53,11 @@ public class RecipesController {
     }
 
     @GetMapping("/recipes")
-    public PaginatedRecipeResponse getAllRecipes(@RequestParam(required = false) Integer page) {
-        return service.getAllRecipes(page);
+    public PaginatedRecipeResponse getAllRecipes(
+            @RequestParam(required = false) Integer page,
+            @RequestParam(required = false) String lang
+    ) {
+        return service.getAllRecipes(page, lang);
     }
 
 //    @GetMapping(value = "/search", params = "product")

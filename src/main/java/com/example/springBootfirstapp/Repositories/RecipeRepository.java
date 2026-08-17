@@ -16,8 +16,10 @@ public interface RecipeRepository extends JpaRepository<RecipeEntity, Integer> {
     @Query("""
         SELECT DISTINCT r FROM RecipeEntity r
         LEFT JOIN r.alterNames a
+        LEFT JOIN r.translations t
         WHERE LOWER(r.nameRecipe) = LOWER(:name)
            OR LOWER(a.alterName) = LOWER(:name)
+           OR LOWER(t.translation) = LOWER(:name)
         """)
-    List<RecipeEntity> findAllByNameOrAlterName(@Param("name") String name);
+    List<RecipeEntity> findAllByNameOrAlterNameOrTranslation(@Param("name") String name);
 }

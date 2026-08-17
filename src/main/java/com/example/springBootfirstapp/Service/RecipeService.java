@@ -1,18 +1,14 @@
 package com.example.springBootfirstapp.Service;
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.example.springBootfirstapp.*;
+import com.example.springBootfirstapp.DTO.ProductsForRecipeDto;
 import com.example.springBootfirstapp.DTO.RecipeDto;
 import com.example.springBootfirstapp.Entities.AlterNameEntity;
 import com.example.springBootfirstapp.Entities.ProductEntity;
 import com.example.springBootfirstapp.Entities.RecipeEntity;
 import com.example.springBootfirstapp.Entities.TranslateEntity;
+import com.example.springBootfirstapp.Pagination.PaginatedRecipeResponse;
 import com.example.springBootfirstapp.Repositories.RecipeRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -89,19 +85,26 @@ public class RecipeService {
         return "Recipe deleted";
     }
 
-    public PaginatedRecipeResponse getAllRecipes(Integer page) {
+    public PaginatedRecipeResponse getAllRecipes(Integer page, String lang) {
         int limit = 5;
         int currentPage;
+
         if (page == null || page < 1) {
             currentPage = 1;
         } else {
             currentPage = page;
         }
-        PageRequest pageRequest = PageRequest.of(currentPage-1,limit);
+
+        PageRequest pageRequest = PageRequest.of(currentPage - 1, limit);
         Page<RecipeEntity> recipePage = recipeRepository.findAll(pageRequest);
-        ArrayList<RecipeEntity> recipes = new ArrayList<>(recipePage.getContent());
-        int totalItems=(int) recipePage.getTotalElements();
+
+        List<RecipeDto> recipes = recipePage.getContent()
+                .stream()
+                .map(recipeEntity -> returnRecipe(recipeEntity, lang))
+                .toList();
+
         int numberOfPages = recipePage.getTotalPages();
+
         return new PaginatedRecipeResponse(
                 recipes,
                 recipes.size(),
@@ -110,51 +113,9 @@ public class RecipeService {
         );
     }
 
-//    private ArrayList<RecipeEntity> getRecipesByLimitAndOffset(int limit, int offset) {
-//        ArrayList<RecipeEntity> recipes = new ArrayList<>();
-//        String sql = "SELECT * FROM recipes ORDER BY id LIMIT ? OFFSET ?";
-//        try (Connection conn = DbConnection.getConnection();
-//             PreparedStatement pstm = conn.prepareStatement(sql)) {
-//            pstm.setInt(1, limit);
-//            pstm.setInt(2, offset);
-//            ResultSet rs = pstm.executeQuery();
-//            while (rs.next()) {
-//                RecipeEntity recipe = mapRecipe(rs);
-//                recipes.add(recipe);
-//            }
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//        return recipes;
-//    }
-//
-//    private int countRecipes() {
-//        String sql = "SELECT COUNT(*) FROM recipes";
-//        try (Connection conn = DbConnection.getConnection();
-//             PreparedStatement pstm = conn.prepareStatement(sql)) {
-//            ResultSet rs = pstm.executeQuery();
-//            if (rs.next()) {
-//                return rs.getInt(1);
-//            }
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//        return 0;
-//    }
-//
-//    private RecipeEntity mapRecipe(ResultSet rs) throws SQLException {
-//        int id = rs.getInt("id");
-//        String name = rs.getString("name_of_recipe");
-//        String translate = rs.getString("translate_of_recipe");
-//        String alterName = rs.getString("alter_name_of_recipe");
-//        String recipeText = rs.getString("recipe");
-//        List<String> products = new ArrayList<>();
-//        return new RecipeEntity(id, name, translate, alterName, recipeText, products);
-//    }
-
 
     public List<RecipeDto> findRecipeByName(String name, String lang) {
-        List<RecipeEntity> recipes = recipeRepository.findAllByNameOrAlterName(name);
+        List<RecipeEntity> recipes = recipeRepository.findAllByNameOrAlterNameOrTranslation(name);
 
         if (recipes.isEmpty()) {
             throw new RuntimeException("Recipe not found");
@@ -165,6 +126,27 @@ public class RecipeService {
                 .toList();
     }
 
+    private ProductsForRecipeDto returnProductShort(ProductEntity productEntity, String lang) {
+        String productName = getTranslatedProperties(
+                productEntity.getTranslations(),
+                "name",
+                lang,
+                productEntity.getName()
+        );
+
+        List<String> alterNames = productEntity.getAlterNames()
+                .stream()
+                .map(AlterNameEntity::getAlterName)
+                .toList();
+
+        return new ProductsForRecipeDto(
+                productEntity.getId(),
+                productName,
+                productEntity.getSlug(),
+                alterNames
+        );
+    }
+
     private RecipeDto returnRecipe(RecipeEntity recipeEntity, String lang) {
         String recipeName = getTranslatedProperties(
                 recipeEntity.getTranslations(),
@@ -172,6 +154,11 @@ public class RecipeService {
                 lang,
                 recipeEntity.getNameRecipe()
         );
+
+        List<ProductsForRecipeDto> products = recipeEntity.getProducts()
+                .stream()
+                .map(productEntity -> returnProductShort(productEntity, lang))
+                .toList();
 
         String recipeText = getTranslatedProperties(
                 recipeEntity.getTranslations(),
@@ -190,7 +177,8 @@ public class RecipeService {
                 recipeName,
                 alterNames,
                 recipeEntity.getSlugRecipe(),
-                recipeText
+                recipeText,
+                products
         );
     }
 

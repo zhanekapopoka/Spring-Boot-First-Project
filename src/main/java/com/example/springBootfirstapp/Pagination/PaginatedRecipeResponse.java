@@ -1,16 +1,18 @@
-package com.example.springBootfirstapp;
+package com.example.springBootfirstapp.Pagination;
 
+import com.example.springBootfirstapp.DTO.RecipeDto;
 import com.example.springBootfirstapp.Entities.RecipeEntity;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class PaginatedRecipeResponse {
-    private ArrayList<RecipeEntity> items;
+    private List<RecipeDto> items;
     private int count;
     private int currentPage;
     private int numberOfPages;
 
-    public PaginatedRecipeResponse(ArrayList<RecipeEntity> items, int count, int currentPage, int numberOfPages){
+    public PaginatedRecipeResponse(List<RecipeDto> items, int count, int currentPage, int numberOfPages){
         this.count=count;
         this.currentPage=currentPage;
         this.numberOfPages=numberOfPages;
@@ -26,7 +28,7 @@ public class PaginatedRecipeResponse {
     public int getCurrentPage(){
         return currentPage;
     }
-    public ArrayList<RecipeEntity> getItems(){
+    public List<RecipeDto> getItems(){
         return items;
     }
 }

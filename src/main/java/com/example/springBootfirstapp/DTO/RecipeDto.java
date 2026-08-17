@@ -8,13 +8,15 @@ public class RecipeDto {
     private List<String> alterNames;
     private String slug;
     private String recipe;
+    private List<ProductsForRecipeDto> products;
 
-    public RecipeDto(Integer id,String name, List<String> alterName, String slug, String recipe){
+    public RecipeDto(Integer id,String name, List<String> alterName, String slug, String recipe,List<ProductsForRecipeDto> products){
         this.alterNames =alterName;
         this.name=name;
         this.id=id;
         this.slug=slug;
         this.recipe=recipe;
+        this.products=products;
     }
 
     public Integer getId() {
@@ -55,5 +57,13 @@ public class RecipeDto {
 
     public void setRecipe(String recipe) {
         this.recipe = recipe;
+    }
+
+    public List<ProductsForRecipeDto> getProducts() {
+        return products;
+    }
+
+    public void setProducts(List<ProductsForRecipeDto> products) {
+        this.products = products;
     }
 }

@@ -3,7 +3,7 @@ package com.example.springBootfirstapp.Controllers;
 
 import com.example.springBootfirstapp.DTO.ProductDto;
 import com.example.springBootfirstapp.Entities.ProductEntity;
-import com.example.springBootfirstapp.PaginatedProductResponse;
+import com.example.springBootfirstapp.Pagination.PaginatedProductResponse;
 import com.example.springBootfirstapp.Service.ProductService;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,8 +26,10 @@ public class ProductController {
         return service1.updateProduct(id, product);
     }
     @GetMapping("/products")
-    public PaginatedProductResponse getAllProducts(@RequestParam(required = false) Integer page) {
-        return service1.getAllProducts(page);
+    public PaginatedProductResponse getAllProducts(
+            @RequestParam(required = false) Integer page,
+            @RequestParam(required = false) String lang) {
+        return service1.getAllProducts(page,lang);
     }
 
     @DeleteMapping("/product/{id}")
